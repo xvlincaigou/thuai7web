@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <h2>注册</h2>
+
+    <form id="registerForm">
+      学号:<br />
+      <input type="text" id="register学号" />
+      <br />
+      姓名:<br />
+      <input type="text" id="register姓名" />
+      <br />
+      密码:<br />
+      <input type="password" id="register密码" />
+      <br /><br />
+      <input type="submit" value="注册" />
+    </form>
+
+    <h2>登录</h2>
+
+    <form id="loginForm">
+      学号:<br />
+      <input type="text" id="login学号" />
+      <br />
+      密码:<br />
+      <input type="password" id="login密码" />
+      <br /><br />
+      <input type="submit" value="登录" />
+    </form>
+
+    <script>
+      document
+        .getElementById("registerForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          var code = document.getElementById("register学号").value;
+          var name = document.getElementById("register姓名").value;
+          var password = document.getElementById("register密码").value;
+
+          fetch("http://localhost:8000/register", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              code: code,
+              name: name,
+              password: password,
+            }),
+          })
+            .then(function (response) {
+              var status = response.status;
+              return response.text().then(function (text) {
+                return status + " " + text;
+              });
+            })
+            .then(function (message) {
+              alert(message);
+            });
+        });
+
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          var code = document.getElementById("login学号").value;
+          var password = document.getElementById("login密码").value;
+
+          fetch("/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              code: code,
+              password: password,
+            }),
+          })
+            .then(function (response) {
+              return response.text();
+            })
+            .then(function (text) {
+              alert(text);
+            });
+        });
+    </script>
+  </body>
+</html>
